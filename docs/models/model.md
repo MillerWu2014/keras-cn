@@ -1,6 +1,8 @@
 # 泛型模型接口
 
-Keras的泛型模型为Model，即广义的拥有输入和输出的模型，我们使用```Model```来初始化一个泛型模型
+为什么叫“泛型模型”，请查看[<font color='#FF0000'>一些基本概念</font>](../getting_started/concepts/#functional)
+
+Keras的泛型模型为```Model```，即广义的拥有输入和输出的模型，我们使用```Model```来初始化一个泛型模型
 
 ```python
 from keras.models import Model
@@ -21,7 +23,7 @@ model = Model(input=[a1, a2], output=[b1, b3, b3])
 
 * ```model.layers```：组成模型图的各个层
 * ```model.inputs```：模型的输入张量列表
-* ```model.outpus```：模型的输出张量列表
+* ```model.outputs```：模型的输出张量列表
 
 ***
 
@@ -34,9 +36,9 @@ compile(self, optimizer, loss, metrics=[], loss_weights=None, sample_weight_mode
 ```
 本函数编译模型以供训练，参数有
 
-* optimizer：优化器，为预定义优化器名的字符串或优化器对象，参考[<font color='#FF0000'>优化器</font>](../other/optimizers.md)
+* optimizer：优化器，为预定义优化器名或优化器对象，参考[<font color='#FF0000'>优化器</font>](../other/optimizers.md)
 
-* loss：目标函数，为预定义损失函数名的字符串或一个目标函数，参考[<font color='#FF0000'>目标函数</font>](../other/objectives.md)
+* loss：目标函数，为预定义损失函数名或一个目标函数，参考[<font color='#FF0000'>目标函数</font>](../other/objectives.md)
 
 * metrics：列表，包含评估模型在训练和测试时的性能的指标，典型用法是```metrics=['accuracy']```如果要在多输出模型中为不同的输出指定不同的指标，可像该参数传递一个字典，例如```metrics={'ouput_a': 'accuracy'}```
 
@@ -44,6 +46,7 @@ compile(self, optimizer, loss, metrics=[], loss_weights=None, sample_weight_mode
 
 * kwargs：使用TensorFlow作为后端请忽略该参数，若使用Theano作为后端，kwargs的值将会传递给 K.function
 
+【Tips】如果你只是载入模型并利用其predict，可以不用进行compile。在Keras中，compile主要完成损失函数和优化器的一些配置，是为训练服务的。predict会在内部进行符号函数的编译工作（通过调用_make_predict_function生成函数）【@白菜，@我是小将】
 ***
 
 ### fit
@@ -73,7 +76,7 @@ fit(self, x, y, batch_size=32, nb_epoch=10, verbose=1, callbacks=[], validation_
 
 * class_weight：字典，将不同的类别映射为不同的权值，该参数用来在训练过程中调整损失函数（只能用于训练）。该参数在处理非平衡的训练数据（某些类的训练样本数很少）时，可以使得损失函数对样本数不足的数据更加关注。
 
-* sample_weight：权值的numpy array，用于在训练时调整损失函数（仅用于训练）。可以传递一个1D的与样本等长的向量用于对样本进行1对1的加权，或者在面对时序数据时，传递一个的形式为（samples，sequence_length）的矩阵来为每个时间步上的样本赋不同的权。这种情况下请确定在编译模型时添加了```sample_weight_mode='remporal'```。
+* sample_weight：权值的numpy array，用于在训练时调整损失函数（仅用于训练）。可以传递一个1D的与样本等长的向量用于对样本进行1对1的加权，或者在面对时序数据时，传递一个的形式为（samples，sequence_length）的矩阵来为每个时间步上的样本赋不同的权。这种情况下请确定在编译模型时添加了```sample_weight_mode='temporal'```。
 
 ```fit```函数返回一个```History```的对象，其```History.history```属性记录了损失函数和其他指标的数值随epoch变化的情况，如果有验证集的话，也包含了验证集的这些指标变化情况
 
@@ -82,6 +85,9 @@ fit(self, x, y, batch_size=32, nb_epoch=10, verbose=1, callbacks=[], validation_
 <a name='evaluate'>
 <font color='#404040'>
 ### evaluate
+</font>
+</a>
+
 ```python
 evaluate(self, x, y, batch_size=32, verbose=1, sample_weight=None)
 ```
@@ -102,8 +108,6 @@ evaluate(self, x, y, batch_size=32, verbose=1, sample_weight=None)
 如果没有特殊说明，以下函数的参数均保持与```fit```的同名参数相同的含义
 
 如果没有特殊说明，以下函数的verbose参数（如果有）均只能取0或1
-</font>
-</a>
 
 ***
 
@@ -201,7 +205,7 @@ model.fit_generator(generate_arrays_from_file('/my_file.txt'),
 ```python
 evaluate_generator(self, generator, val_samples, max_q_size=10)
 ```
-本函数使用一个生成器作为数据源评估模型，生成器应返回与```test_on_batch```的输入数据相同类型的数据。该函数的参数与```fit_generator```同名参数含义相同
+本函数使用一个生成器作为数据源，来评估模型，生成器应返回与```test_on_batch```的输入数据相同类型的数据。该函数的参数与```fit_generator```同名参数含义相同
 
 ***
 

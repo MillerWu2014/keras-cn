@@ -21,7 +21,7 @@ compile(self, optimizer, loss, metrics=[], sample_weight_mode=None)
 
 * loss：字符串（预定义损失函数名）或目标函数，参考[<font color='#FF0000'>目标函数</font>](../other/objectives.md)
 
-* metrics：列表，包含评估模型在训练和测试时的性能的指标，典型用法是```metrics=['accuracy']```
+* metrics：列表，包含评估模型在训练和测试时的网络性能的指标，典型用法是```metrics=['accuracy']```
 
 * sample_weight_mode：如果你需要按时间步为样本赋权（2D权矩阵），将该值设为“temporal”。默认为“None”，代表按样本赋权（1D权）。在下面```fit```函数的解释中有相关的参考内容。
 
@@ -41,7 +41,7 @@ model.compile(optimizer='rmsprop',
 ```python
 fit(self, x, y, batch_size=32, nb_epoch=10, verbose=1, callbacks=[], validation_split=0.0, validation_data=None, shuffle=True, class_weight=None, sample_weight=None)
 ```
-本函数将模型训练nb_epoch轮，其参数有：
+本函数将模型训练```nb_epoch```轮，其参数有：
 
 * x：输入数据。如果模型只有一个输入，那么x的类型是numpy array，如果模型有多个输入，那么x的类型应当为list，list的元素是对应于各个输入的numpy array
 
@@ -63,7 +63,7 @@ fit(self, x, y, batch_size=32, nb_epoch=10, verbose=1, callbacks=[], validation_
 
 * class_weight：字典，将不同的类别映射为不同的权值，该参数用来在训练过程中调整损失函数（只能用于训练）
 
-* sample_weight：权值的numpy array，用于在训练时调整损失函数（仅用于训练）。可以传递一个1D的与样本等长的向量用于对样本进行1对1的加权，或者在面对时序数据时，传递一个的形式为（samples，sequence_length）的矩阵来为每个时间步上的样本赋不同的权。这种情况下请确定在编译模型时添加了```sample_weight_mode='remporal'```。
+* sample_weight：权值的numpy array，用于在训练时调整损失函数（仅用于训练）。可以传递一个1D的与样本等长的向量用于对样本进行1对1的加权，或者在面对时序数据时，传递一个的形式为（samples，sequence_length）的矩阵来为每个时间步上的样本赋不同的权。这种情况下请确定在编译模型时添加了```sample_weight_mode='temporal'```。
 
 ```fit```函数返回一个```History```的对象，其```History.history```属性记录了损失函数和其他指标的数值随epoch变化的情况，如果有验证集的话，也包含了验证集的这些指标变化情况
 
@@ -71,6 +71,8 @@ fit(self, x, y, batch_size=32, nb_epoch=10, verbose=1, callbacks=[], validation_
 <a name='evaluate'>
 <font color='#404040'>
 ### evaluate
+</font>
+</a>
 ```python
 evaluate(self, x, y, batch_size=32, verbose=1, sample_weight=None)
 ```
@@ -91,8 +93,7 @@ evaluate(self, x, y, batch_size=32, verbose=1, sample_weight=None)
 如果没有特殊说明，以下函数的参数均保持与```fit```的同名参数相同的含义
 
 如果没有特殊说明，以下函数的verbose参数（如果有）均只能取0或1
-</font>
-</a>
+
 
 ***
 
@@ -194,11 +195,11 @@ fit_generator(self, generator, samples_per_epoch, nb_epoch, verbose=1, callbacks
 def generate_arrays_from_file(path):
     while 1:
     f = open(path)
-    for line in f:
-        # create numpy arrays of input data
-        # and labels, from each line in the file
-        x, y = process_line(line)
-        yield (x, y)
+		for line in f:
+			# create numpy arrays of input data
+			# and labels, from each line in the file
+			x, y = process_line(line)
+			yield (x, y)
     f.close()
 
 model.fit_generator(generate_arrays_from_file('/my_file.txt'),

@@ -10,7 +10,7 @@ model.compile(loss='mean_squared_error', optimizer='sgd')
 
 * y_true：真实的数据标签，Theano/TensorFlow张量
 
-* y_pred：预测值，与y_true相同形状的Theano/TensorFlow张量
+* y_pred：预测值，与y_true相同shape的Theano/TensorFlow张量
 
 真实的优化目标函数是在各个数据点得到的损失函数值之和的均值
 
@@ -39,3 +39,5 @@ model.compile(loss='mean_squared_error', optimizer='sgd')
 * poisson：即```(predictions - targets * log(predictions))```的均值
 
 * cosine_proximity：即预测值与真实标签的余弦距离平均值的相反数
+
+【Tips】过一段时间（等我或者谁有时间吧……）我们将把各种目标函数的表达式和常用场景总结一下。

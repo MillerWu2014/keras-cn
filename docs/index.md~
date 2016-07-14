@@ -44,10 +44,36 @@ Keras适用的Python版本是：Python 2.7-3.5
 * 与Python协作：Keras没有单独的模型配置文件类型（作为对比，caffe有），模型由python代码描述，使其更紧凑和更易debug，并提供了扩展的便利性。
 
 ***
+##深度学习与Keras
+
+[<font color='#FF0000'>一些基本概念</font>](getting_started/concepts)中提到的概念应该是你在使用Keras之前应该了解的。除此之外，我们从[<font color='#FF0000'>blog.keras.io</font>](blog.keras.io)和其他地方选择了一些文章，翻译在栏目“深度学习与Keras”中。该栏目的位置是左侧导航栏中的最下方，欢迎各位同学阅读和提出意见。
+
+所有的文章均在醒目位置标志标明来源与作者，本网站无任何盈利目的，对该栏目文章的原文也不具有任何处置权。如您仍觉不妥，请联系本人（moyan_work@foxmail.com）删除。
+
+##Keras 1.0指南
+
+Keras从2015年3月开始启动，经过一年多的开发，目前Keras进入了1.0的时代。Keras 1.0依然遵循相同的设计原则，但与之前的版本相比有很大的不同。如果你曾经使用过此前的其他版本Keras。你或许会关心1.0的新特性。
+
+* 泛型模型：简单和强大的新模块，用于支持复杂深度学习模型的搭建。
+
+* 更优秀的性能：现在，Keras模型的编译时间得到缩短。所有的RNN现在都可以用两种方式实现，以供用户在不同配置任务和配置环境下取得最大性能。现在，基于Theano的RNN也可以被展开，以获得大概25%的加速计算。
+
+* 测量指标：现在，你可以提供一系列的测量指标来在Keras的任何监测点观察模型性能。
+
+* 更优的用户体验：我们面向使用者重新编写了代码，使得函数API更简单易记，同时提供更有效的出错信息。
+
+* 新版本的Keras提供了Lambda层，以实现一些简单的计算任务。
+
+* ...
+
+如果你已经基于Keras0.3编写了自己的层，那么在升级后，你需要为自己的代码做以下调整，以在Keras1.0上继续运行。请参考[<font color='#FF0000'>编写自己的层</font>](layers/writting_layer/#adjust)
+
+
+***
 
 ##快速开始：30s上手Keras
 
-Keras的核心数据结构是“模型”，模型是一种组织网络层的方式。Keras中主要的模型是Sequential模型，Sequential是一系列网络层按顺序构成的栈。你也可以查看[<font color=#FF0000>泛型模型</font>](getting_started/functional_API.md)来查看更复杂的模型
+Keras的核心数据结构是“模型”，模型是一种组织网络层的方式。Keras中主要的模型是Sequential模型，Sequential是一系列网络层按顺序构成的栈。你也可以查看[<font color=#FF0000>泛型模型</font>](getting_started/functional_API.md)来学习建立更复杂的模型
 
 Sequential模型如下
 ```python
@@ -68,16 +94,18 @@ model.add(Activation("softmax"))
 ```python
 model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
 ```	
-编译模型时必须指明损失函数和优化器，如果你需要的话，也可以自己定制损失函数。Keras的一个核心理念就是使得事情在简单的同时，保证用户对他们希望做的事情有足够的控制力度（最绝对的控制来自于源代码的可扩展性）
+编译模型时必须指明损失函数和优化器，如果你需要的话，也可以自己定制损失函数。Keras的一个核心理念就是简明易用同时，保证用户对Keras的绝对控制力度，用户可以根据自己的需要定制自己的模型、网络层，甚至修改源代码。
 ```python
 from keras.optimizers import SGD
 model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01, momentum=0.9, nesterov=True))
 ```
-完成模型编译后，我们在训练数据上按batch进行一定次数的迭代训练，以拟合网络：
+完成模型编译后，我们在训练数据上按batch进行一定次数的迭代训练，以拟合网络，关于为什么要使用‘batch’，请参考[<font color=#FF0000>一些基本概念</font>](getting_started/concepts/#batch)
+
+
 ```python
 model.fit(X_train, Y_train, nb_epoch=5, batch_size=32)
 ```
-当然，我们也可以手动将一批批的数据送入网络中训练，这时候需要使用：
+当然，我们也可以手动将一个个batch的数据送入网络中训练，这时候需要使用：
 ```python
 model.train_on_batch(X_batch, Y_batch)
 ```
@@ -90,7 +118,7 @@ loss_and_metrics = model.evaluate(X_test, Y_test, batch_size=32)
 classes = model.predict_classes(X_test, batch_size=32)
 proba = model.predict_proba(X_test, batch_size=32)
 ```	
-搭建一个问答系统、图像分类模型，或神经图灵机、word2vec嵌入器就是这么快。支撑深度学习的基本想法本就是简单的，那凭什么我们不能把它的实现也变得超简单呢？
+搭建一个问答系统、图像分类模型，或神经图灵机、word2vec词嵌入器就是这么快。支撑深度学习的基本想法本就是简单的，现在让我们把它的实现也变的简单起来！
 
 为了更深入的了解Keras，我们建议你查看一下下面的两个tutorial
 
@@ -122,6 +150,8 @@ Keras使用了下面的依赖包：
 当使用TensorFlow为后端时：
 
 * [<font color=FF0000>TensorFlow</font>](https://github.com/tensorflow/tensorflow#download-and-setup)
+
+【Tips】“后端”翻译自backend，指的是Keras依赖于完成底层的张量运算的软件包。【@Bigmoyan】
 
 安装Keras时，请<code>cd</code>到Keras的文件夹中，并运行下面的安装命令：
 ```python

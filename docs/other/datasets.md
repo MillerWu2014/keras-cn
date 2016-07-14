@@ -15,9 +15,9 @@ from keras.datasets import cifar10
 
 两个Tuple
 
-```(X_train, X_test)```是形如（nb_samples, 3, 32, 32）的RGB三通道图像数据，数据类型是无符号8位整形（uint8）
+```X_train```和```X_test```是形如（nb_samples, 3, 32, 32）的RGB三通道图像数据，数据类型是无符号8位整形（uint8）
 
-```(X_train, X_test)```是形如（nb_samples,）标签数据，标签的范围是0~9
+```Y_train```和 ```Y_test```是形如（nb_samples,）标签数据，标签的范围是0~9
 
 ***
 
@@ -50,7 +50,7 @@ from keras.datasets import cifar100
 
 本数据库含有来自IMDB的25,000条影评，被标记为正面/负面两种评价。影评已被预处理为词下标构成的[<font color='#FF0000'>序列</font>](../preprocessing/sequence)。方便起见，单词的下标基于它在数据集中出现的频率标定，例如整数3所编码的词为数据集中第3常出现的词。这样的组织方法使得用户可以快速完成诸如“只考虑最常出现的10,000个词，但不考虑最常出现的20个词”这样的操作
 
-按照惯例，0不代表任何特定的词，而用来编码任何为止单词
+按照惯例，0不代表任何特定的词，而用来编码任何未知单词
 
 ### 使用方法
 ```python
@@ -132,3 +132,5 @@ from keras.datasets import mnist
 * y_train和y_test：是形如（nb_samples,）标签数据，标签的范围是0~9
 
 数据库将会被下载到```'~/.keras/datasets/'+path```
+
+***
